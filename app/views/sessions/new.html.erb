@@ -1,0 +1,48 @@
+<div class="min-h-screen grid md:grid-cols-2">
+  <div class="flex items-center justify-center bg-ink px-6 py-16">
+    <div class="w-full max-w-sm">
+      <%= link_to "Scriptorium", root_path, class: "font-display text-xl text-paper/60 block mb-10" %>
+      <h1 class="font-display text-3xl text-paper mb-8"><%= t("base.description.welcome_back") %></h1>
+
+      <%= form_with url: session_path, method: :post, local: true, class: "space-y-5" do |f| %>
+        <div>
+          <%= label_tag :email, t("account.info.email"), class: "block text-sm text-paper/70 mb-2" %>
+          <%= text_field_tag :email, nil, class: "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-paper placeholder-paper/30 focus:outline-none focus:border-carmine transition" %>
+        </div>
+
+        <div>
+          <%= label_tag :password, t("account.create.password"), class: "block text-sm text-paper/70 mb-2" %>
+          <%= password_field_tag :password, nil, class: "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-paper placeholder-paper/30 focus:outline-none focus:border-carmine transition" %>
+        </div>
+
+        <%= submit_tag t("navbar.log_in"), class: "w-full bg-carmine text-paper py-3 rounded-lg font-medium hover:bg-carmine/90 transition cursor-pointer" %>
+      <% end %>
+
+      <div>
+        <p class="flex font-display text-sm text-paper/70 mb-2 px-6 py-3"><%= t("base.description.new_here") %>
+          <%= link_to t("account.create.create_account"), new_user_path,
+                class: "text-carmine px-2 font-medium mb-10" %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative hidden md:flex items-center justify-center bg-violet px-12 py-16 overflow-hidden">
+    <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-carmine/30 blur-3xl"></div>
+    <div class="absolute -left-16 bottom-0 w-72 h-72 rounded-full bg-ink/50 blur-3xl"></div>
+
+    <div class="relative max-w-sm">
+      <h2 class="font-display text-2xl text-paper mb-6"><%= t("base.description.new_here") %></h2>
+      <%= link_to t("account.create.create_account"), new_user_path,
+            class: "inline-block bg-paper text-violet px-6 py-3 rounded-lg font-medium mb-10 hover:bg-paper/90 transition" %>
+
+      <h3 class="font-display text-lg text-paper mb-4"><%= t("base.description.why_join") %></h3>
+      <ul class="space-y-3 text-paper/80 text-sm">
+        <li class="flex gap-3"><span class="text-carmine">—</span> <%= t("base.description.publish") %></li>
+        <li class="flex gap-3"><span class="text-carmine">—</span> <%= t("base.description.comment") %></li>
+        <li class="flex gap-3"><span class="text-carmine">—</span> <%= t("base.description.like") %></li>
+        <li class="flex gap-3"><span class="text-carmine">—</span> <%= t("base.description.build") %></li>
+      </ul>
+    </div>
+  </div>
+</div>

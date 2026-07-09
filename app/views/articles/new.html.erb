@@ -1,0 +1,6 @@
+<% content_for :title, t("navbar.new_article") %>
+
+<div class="md:w-2/3 w-full">
+  <h1 class="font-display text-3xl text-paper mb-8"><%= t("navbar.new_article") %></h1>
+  <%= render "form", article: @article %>
+</div>

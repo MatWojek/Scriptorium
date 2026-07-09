@@ -1,0 +1,46 @@
+<h1 class="font-display text-2xl text-paper mb-6">Edit user: <%= @user.username %></h1>
+
+<%= form_with model: @user, url: admin_user_path(@user), class: "space-y-5 max-w-lg" do |f| %>
+  <% if @user.errors.any? %>
+    <div class="bg-carmine/10 border border-carmine/30 text-carmine px-4 py-3 rounded-lg text-sm">
+      <%= pluralize(@user.errors.count, "error") %> prevented this user from being saved.
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :username, class: "block text-sm text-paper/70 mb-2" %>
+    <%= f.text_field :username, class: "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+  </div>
+
+  <div>
+    <%= f.label :email, class: "block text-sm text-paper/70 mb-2" %>
+    <%= f.text_field :email, class: "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <%= f.label :first_name, class: "block text-sm text-paper/70 mb-2" %>
+      <%= f.text_field :first_name, class: "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+    </div>
+    <div>
+      <%= f.label :last_name, class: "block text-sm text-paper/70 mb-2" %>
+      <%= f.text_field :last_name, class: "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :role_id, "Role", class: "block text-sm text-paper/70 mb-2" %>
+    <%= f.collection_select :role_id, Role.all, :id, :name, { prompt: "Select a role" },
+          class: "w-full bg-[#2f2f2f] border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= f.check_box :admin, class: "rounded border-white/10 bg-white/5" %>
+    <%= f.label :admin, "Administrator", class: "text-sm text-paper/70" %>
+  </div>
+
+  <div class="flex gap-3">
+    <%= f.submit "Save changes", class: "bg-carmine text-paper px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-carmine/90 transition cursor-pointer" %>
+    <%= link_to "Cancel", admin_users_path, class: "px-5 py-2.5 rounded-lg text-sm font-medium bg-white/5 text-paper hover:bg-white/10 transition" %>
+  </div>
+<% end %>

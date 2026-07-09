@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Scriptorium — Admin</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+  <body class="bg-ink font-body">
+    <nav class="bg-[#2f2f2f] border-b border-white/10 px-6 py-4 flex items-center gap-6">
+      <%= link_to "Admin", admin_root_path, class: "font-display text-lg text-paper" %>
+      <%= link_to "Articles", admin_articles_path, class: "text-sm text-paper/70 hover:text-paper" %>
+      <%= link_to "Comments", admin_comments_path, class: "text-sm text-paper/70 hover:text-paper" %>
+      <%= link_to "Users", admin_users_path, class: "text-sm text-paper/70 hover:text-paper" %>
+      <%= link_to "Back to site", root_path, class: "text-sm text-paper/40 hover:text-paper ml-auto" %>
+    </nav>
+    <main class="max-w-5xl mx-auto px-6 py-10">
+      <%= render "layouts/flash" %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

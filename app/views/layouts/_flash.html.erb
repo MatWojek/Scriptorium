@@ -1,0 +1,11 @@
+<div id="flash-messages" class="block m-3">
+  <% flash.each do |type, message| %>
+    <p
+      class="px-4 py-3 rounded-lg text-sm shadow-lg <%= type == "alert" ? "bg-carmine/10 border border-carmine/30 text-carmine" : "bg-[#2f2f2f] border border-white/10 text-paper" %>"
+      data-controller="flash"
+      data-flash-target="message"
+    >
+      <%= message %>
+    </p>
+  <% end %>
+</div>

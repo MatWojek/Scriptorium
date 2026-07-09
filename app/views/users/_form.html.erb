@@ -1,0 +1,106 @@
+<%= form_with(model: user, class: "space-y-5") do |form| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation" class="bg-carmine/10 border border-carmine/30 text-carmine px-4 py-3 rounded-lg text-sm">
+      <h2 class="font-medium mb-2"><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul class="list-disc ml-5 space-y-0.5">
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# Helper for field classes %>
+  <% field_class = ->(field) {
+    base = "w-full bg-black/30 border rounded-lg px-4 py-3 text-paper placeholder:text-paper/25 focus:outline-none focus:ring-1 transition"
+    has_error = user.errors[field].any?
+    border = has_error ? "border-carmine/60 focus:border-carmine focus:ring-carmine/20" : "border-white/10 focus:border-carmine/60 focus:ring-carmine/20"
+    "#{base} #{border}"
+  } %>
+
+  <div>
+    <%= form.label :avatar, "Profile picture", class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+    <% if user.avatar.attached? %>
+      <%= image_tag user.avatar.variant(resize_to_fill: [80, 80]), class: "w-20 h-20 rounded-full object-cover border border-white/10 mb-3" %>
+    <% end %>
+    <%= form.file_field :avatar, accept: "image/png,image/jpeg,image/webp",
+          class: "w-full text-sm text-paper/70 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-carmine file:text-paper hover:file:bg-carmine/90 file:cursor-pointer" %>
+    <% if user.errors[:avatar].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:avatar].first %></p>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :username, class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+    <%= form.text_field :username, class: field_class.call(:username) %>
+    <% if user.errors[:username].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:username].first %></p>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :email, class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+    <%= form.text_field :email, class: field_class.call(:email) %>
+    <% if user.errors[:email].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:email].first %></p>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+    <div>
+      <%= form.label :password, class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+      <%= form.password_field :password, placeholder: "New password", class: field_class.call(:password_digest) %>
+      <% if user.errors[:password].any? %>
+        <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:password].first %></p>
+      <% end %>
+    </div>
+    <div>
+      <%= form.label :password_confirmation, class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+      <%= form.password_field :password_confirmation, placeholder: "Confirm password", class: field_class.call(:password_digest) %>
+      <% if user.errors[:password_confirmation].any? %>
+        <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:password_confirmation].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+    <div>
+      <%= form.label :first_name, class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+      <%= form.text_field :first_name, class: field_class.call(:first_name) %>
+      <% if user.errors[:first_name].any? %>
+        <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:first_name].first %></p>
+      <% end %>
+    </div>
+    <div>
+      <%= form.label :last_name, class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+      <%= form.text_field :last_name, class: field_class.call(:last_name) %>
+      <% if user.errors[:last_name].any? %>
+        <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:last_name].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :bio, class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+    <%= form.text_area :bio, rows: 4, class: field_class.call(:bio) + " resize-none" %>
+    <% if user.errors[:bio].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:bio].first %></p>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.collection_select :language_id, Language.all, :id, :name,
+      { prompt: t("articles.create.select_language") },
+      class: "w-full bg-[#2f2f2f] border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+  </div>
+
+  <div>
+    <%= form.collection_select :role_id, Role.all, :id, :name,
+      { prompt: t("articles.create.select_role") },
+      class: "w-full bg-[#2f2f2f] border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+  </div>
+
+  <div class="pt-1">
+    <%= form.submit class: "px-6 py-2.5 rounded-lg text-sm font-semibold bg-carmine text-paper hover:bg-carmine/85 active:scale-95 transition cursor-pointer" %>
+  </div>
+<% end %>

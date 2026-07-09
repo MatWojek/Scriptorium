@@ -1,0 +1,19 @@
+<h1 class="font-display text-2xl text-paper mb-6"><%= t("articles.index.comments") %></h1>
+
+<div class="space-y-3">
+  <% @comments.each do |comment| %>
+    <div class="bg-[#2f2f2f] rounded-lg p-4 border border-white/5">
+      <div class="flex items-center justify-between mb-2 text-xs text-paper/50">
+        <span><%= comment.user&.username || "Anonymous" %> · <%= comment.article.title %></span>
+        <span><%= comment.created_at.strftime("%Y-%m-%d %H:%M") %> · IP: <%= comment.ip_address %></span>
+      </div>
+      <p class="text-sm text-paper/80 mb-3"><%= comment.content %></p>
+      <div class="flex gap-2">
+        <%= button_to "Delete", admin_comment_path(comment), method: :delete,
+              class: "text-xs px-3 py-1.5 rounded bg-white/5 text-paper hover:bg-white/10", data: { turbo_confirm: "Are you sure?" } %>
+        <%= button_to "Ban IP", ban_admin_comment_path(comment), method: :post,
+              class: "text-xs px-3 py-1.5 rounded bg-carmine/15 text-carmine hover:bg-carmine hover:text-paper", data: { turbo_confirm: "Ban this IP address?" } %>
+      </div>
+    </div>
+  <% end %>
+</div>

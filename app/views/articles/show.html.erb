@@ -1,0 +1,25 @@
+<div class="flex flex-wrap items-center gap-3 mb-6 text-sm">
+  <%= form_with url: articles_path, method: :get, class: "flex flex-wrap gap-3" do %>
+    <%= select_tag :category_id,
+          options_for_select([["All categories", nil]] + Category.all.map { |c| [c.name, c.id] }, params[:category_id]),
+          class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm",
+          onchange: "this.form.requestSubmit()" %>
+
+    <%= select_tag :language_id,
+          options_for_select([["All languages", nil]] + Language.all.map { |l| [l.name, l.id] }, params[:language_id]),
+          class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm",
+          onchange: "this.form.requestSubmit()" %>
+
+    <%= select_tag :sort,
+          options_for_select([["Newest", nil], ["Most liked", "most_liked"]], params[:sort]),
+          class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm",
+          onchange: "this.form.requestSubmit()" %>
+
+    <% if params[:tag].present? %>
+      <span class="flex items-center gap-1 bg-carmine/10 text-carmine px-3 py-2 rounded-lg text-xs">
+        #<%= params[:tag] %>
+        <%= link_to "×", articles_path(request.query_parameters.except("tag")), class: "ml-1 hover:text-paper" %>
+      </span>
+    <% end %>
+  <% end %>
+</div>

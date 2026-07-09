@@ -1,0 +1,67 @@
+pl:
+  base:
+      description:
+        welcome_back: "Witaj ponownie"
+        have_account: "Masz już konto?"
+        why_join: "Dołącz od Scriptorium"
+        publish: "Publikuj własne artykuły"
+        comment: "Komentuj i dołacz do dyskusji"
+        like: "Polub interesujące artykuły" 
+        build: "Buduj publiczny profil" 
+        new_here: "Nowy tutaj?"
+      prompt: 
+        confirm: "Jesteś pewny?"
+        log_in: "Musisz się zalogować"
+  navbar:
+    articles: "Artykuły"
+    new_article: "Nowy artykuł"
+    log_in: "Zaloguj się"
+    sign_up: "Zarejestruj się"
+    log_out: "Wyloguj się"
+  articles:
+    index:
+      title: "Artykuły"
+      no_articles: "Brak artykułów."
+      first_write: "Bądź pierwszy, napisz coś."
+      write_button: "Napisz pierszy artykuł."
+      number_of_published_articles: "opublikowanych artykułów"
+    show:
+      export_pdf: "Wyeksportuj do PDF"
+      comments: "Komentarze"
+      post_comments: "Napisz komentarz"
+      no_comments: "Brak komentarzy - bądź pierwszy."
+      edit_article: "Edytuj artykuł"
+      delete_article: "Usuń Artykuł"
+      back_to_articles: "Wróć do artykułów"
+    create: 
+      title: "Tytuł"
+      content: "Opis"
+      category: "Kategoria"
+      language: "Język"
+      select_category: "Wybierz kategorię"
+      select_language: "Wybierz język"
+      select_role: "Wybierz role"
+      create_article: "Stwórz artykuł"
+      cancel: "Anuluj"
+  account: 
+    create:
+      password: "Hasło"
+      password_confirmation: "Potwierdź hasło"
+      preferred_language: "Preferowany język"
+      create_account: "Stwórz konto"
+      role: "Twoja rola"
+    info: 
+      username: "Nazwa użytkownika"
+      email: "Email"
+      first_name: "Imię"
+      last_name: "Nazwisko"
+      bio: "Bio"
+      role: "Rola"
+    user: 
+      my_profile: "Mój Profil"
+      my_articles: "Moje Artykuły"
+      edit_user_info: "Edytuj swoje informacje"
+      delete_user: "Usuń Konto"
+    admin: 
+      back_to_users: "Powrót do użytkowników"
+      destroy_this_user: "Usuń tego użytkownika"

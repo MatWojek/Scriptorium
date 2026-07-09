@@ -1,0 +1,83 @@
+<% content_for :title, @user.username %>
+
+<div class="w-4/5 mx-auto max-w-3xl">
+  <div class="bg-[#2f2f2f] rounded-xl p-8 border border-white/5 mb-8">
+    <div class="flex items-start justify-between mb-4">
+      <div class="flex items-center gap-4">
+        <% if @user.avatar.attached? %>
+          <%= image_tag @user.avatar.variant(resize_to_fill: [64, 64]), class: "w-16 h-16 rounded-full object-cover border border-white/10" %>
+        <% else %>
+          <div class="w-16 h-16 rounded-full bg-carmine flex items-center justify-center text-xl font-semibold text-paper">
+            <%= @user.username.first.upcase %>
+          </div>
+        <% end %>
+
+        <div>
+          <h1 class="font-display text-3xl text-paper mb-1"><%= @user.username %></h1>
+          <p class="text-sm text-paper/40">
+            <%= @user.first_name %> <%= @user.last_name %>
+            <% if @user.role %> · <%= @user.role.name %><% end %>
+          </p>
+        </div>
+      </div>
+
+      <div class="text-right">
+        <p class="font-display text-2xl text-carmine"><%= @user.reputation %></p>
+        <p class="text-xs text-paper/40 uppercase tracking-wider">Reputation</p>
+      </div>
+    </div>
+
+    <% if @user.bio.present? %>
+      <p class="text-sm text-paper/70 leading-relaxed border-t border-white/5 pt-4 mb-4"><%= @user.bio %></p>
+    <% end %>
+
+    <% if current_user == @user %>
+      <%# Private information %>
+      <div class="border-t border-white/5 pt-4 mb-4 text-sm text-paper/60 space-y-1">
+        <p><span class="text-paper/40">Email:</span> <%= @user.email %></p>
+        <p><span class="text-paper/40">Articles written:</span> <%= @articles.size %></p>
+        <p><span class="text-paper/40">Comments written:</span> <%= @user.comments.count %></p>
+      </div>
+
+      <div class="flex flex-wrap gap-2 border-t border-white/5 pt-4">
+        <%= link_to t("account.user.edit_user_info"), edit_user_path(@user),
+              class: "px-5 py-2.5 rounded-lg text-sm font-medium bg-white/5 text-paper hover:bg-white/10 transition" %>
+        <% if current_user.admin? %>
+          <%= link_to t("account.admin.back_to_users"), admin_users_path,
+                class: "px-5 py-2.5 rounded-lg text-sm font-medium text-paper/50 hover:text-paper hover:bg-white/5 transition" %>
+        <% end %>
+        <%= button_to t("account.user.delete_user"), @user, method: :delete,
+              form_class: "inline-block",
+              class: "bg-carmine/15 text-carmine border border-carmine/30 px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-carmine hover:text-paper hover:border-carmine transition",
+              data: { turbo_confirm: t("base.confirm") } %>
+      </div>
+    <% end %>
+  </div>
+
+  <h2 class="font-display text-xl text-paper mb-4">Articles</h2>
+  <% if @articles.empty? %>
+    <p class="text-sm text-paper/40 mb-8">No articles yet.</p>
+  <% else %>
+    <div class="space-y-4 mb-8">
+      <% @articles.each do |article| %>
+        <%= render article %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <h2 class="font-display text-xl text-paper mb-4">Recent comments</h2>
+  <% if @comments.empty? %>
+    <p class="text-sm text-paper/40">No comments yet.</p>
+  <% else %>
+    <div class="space-y-3">
+      <% @comments.each do |comment| %>
+        <div class="bg-[#2f2f2f] rounded-lg p-4 border border-white/5">
+          <p class="text-xs text-paper/40 mb-2">
+            on <%= link_to comment.article.title, comment.article, class: "text-carmine hover:underline" %>
+          </p>
+          <p class="text-sm text-paper/75"><%= comment.content %></p>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

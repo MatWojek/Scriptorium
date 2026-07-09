@@ -1,0 +1,46 @@
+<%= form_with(model: article, class: "space-y-5") do |form| %>
+  <% if article.errors.any? %>
+    <div id="error_explanation" class="bg-carmine/10 border border-carmine/30 text-carmine px-4 py-3 rounded-lg text-sm">
+      <h2 class="font-medium mb-2"><%= pluralize(article.errors.count, "error") %> prohibited this article from being saved:</h2>
+      <ul class="list-disc ml-5 space-y-0.5">
+        <% article.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, t("articles.create.title"), class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+    <%= form.text_field :title,
+          placeholder: t("articles.create.title"),
+          class: "w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-paper placeholder:text-paper/25 focus:outline-none focus:border-carmine/60 focus:ring-1 focus:ring-carmine/20 transition" %>
+  </div>
+
+  <div>
+    <%= form.label :content, t("articles.create.content"), class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+    <div class="rounded-lg border border-white/10 focus-within:border-carmine/60 focus-within:ring-1 focus-within:ring-carmine/20 transition overflow-hidden [&_trix-toolbar]:bg-[#252525] [&_trix-toolbar]:border-b [&_trix-toolbar]:border-white/10 [&_trix-editor]:bg-black/30 [&_trix-editor]:text-paper [&_trix-editor]:px-4 [&_trix-editor]:py-3 [&_trix-editor]:min-h-[140px] [&_trix-editor]:outline-none [&_trix-editor]:text-sm">
+      <%= form.rich_textarea :content %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :category_id, t("articles.create.category"), class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+    <%= form.collection_select :category_id, Category.all, :id, :name,
+          { prompt: t("articles.create.select_category") },
+          class: "w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine/60 focus:ring-1 focus:ring-carmine/20 transition appearance-none cursor-pointer" %>
+  </div>
+
+  <div>
+    <%= form.label :language_id, t("articles.create.language"), class: "block text-xs font-semibold uppercase tracking-widest text-paper/40 mb-2" %>
+    <%= form.collection_select :language_id, Language.all, :id, :name,
+          { prompt: t("articles.create.select_language") },
+          class: "w-full bg-black/30 border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine/60 focus:ring-1 focus:ring-carmine/20 transition appearance-none cursor-pointer" %>
+  </div>
+
+  <div class="flex items-center gap-3 pt-1">
+    <%= form.submit t("articles.create.create_article"), class: "px-6 py-2.5 rounded-lg text-sm font-semibold bg-carmine text-paper hover:bg-carmine/85 active:scale-95 transition cursor-pointer" %>
+    <%= link_to t("articles.create.cancel"), articles_path,
+          class: "px-5 py-2.5 rounded-lg text-sm font-medium text-paper/50 hover:text-paper hover:bg-white/5 transition" %>
+  </div>
+<% end %>

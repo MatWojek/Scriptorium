@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #252525;
+  --color-violet: #2e1a47;
+  --color-carmine: #9f1239;
+  --color-paper: #ffffff;
+
+  --font-display: "Fraunces", serif;
+  --font-body: "Inter", sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+trix-toolbar {
+  background: #2f2f2f;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.5rem 0.5rem 0 0;
+  padding: 0.5rem;
+}
+
+.trix-content img {
+  border-radius: 12px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+trix-toolbar .trix-button {
+  color: #fff;
+  background-color: white;
+}
+
+trix-toolbar .trix-button.trix-active {
+  background: #9f1239;
+}
+
+trix-editor {
+  min-height: 200px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  color: #fff;
+  padding: 1rem;
+}
+
+trix-editor, .prose [data-trix-content] {
+  color: var(--color-paper);
+}
+
+trix-editor:empty:not(:focus)::before {
+  color: rgba(255,255,255,0.3);
+}
+
+select option {
+  background-color: #2f2f2f;
+  color: #ffffff;
+}

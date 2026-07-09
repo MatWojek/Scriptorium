@@ -1,0 +1,7 @@
+<h1 class="font-display text-2xl text-paper mb-2"><%= @user.username %></h1>
+<p class="text-sm text-paper/40 mb-6"><%= @user.email %></p>
+
+<div class="flex gap-3">
+  <%= link_to "Edit", edit_admin_user_path(@user), class: "px-5 py-2.5 rounded-lg text-sm font-medium bg-white/5 text-paper hover:bg-white/10 transition" %>
+  <%= link_to "Back to users", admin_users_path, class: "px-5 py-2.5 rounded-lg text-sm font-medium text-paper/50 hover:text-paper" %>
+</div>

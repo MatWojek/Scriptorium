@@ -1,0 +1,17 @@
+<h1 class="font-display text-2xl text-paper mb-6">Articles</h1>
+
+<div class="space-y-3">
+  <% @articles.each do |article| %>
+    <div class="bg-[#2f2f2f] rounded-lg p-4 border border-white/5 flex items-center justify-between">
+      <div>
+        <%= link_to article.title, article, class: "text-paper font-medium hover:text-carmine transition" %>
+        <p class="text-xs text-paper/40 mt-1">
+          <%= article.user&.username || "Unknown" %> · <%= article.created_at.strftime("%Y-%m-%d") %>
+        </p>
+      </div>
+      <%= button_to "Delete", admin_article_path(article), method: :delete,
+            class: "text-xs px-3 py-1.5 rounded bg-carmine/15 text-carmine hover:bg-carmine hover:text-paper transition",
+            data: { turbo_confirm: "Are you sure?" } %>
+    </div>
+  <% end %>
+</div>

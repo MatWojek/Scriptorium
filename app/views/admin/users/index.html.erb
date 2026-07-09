@@ -1,0 +1,26 @@
+<h1 class="font-display text-2xl text-paper mb-6">Users</h1>
+
+<div class="space-y-3">
+  <% @users.each do |user| %>
+    <div class="bg-[#2f2f2f] rounded-lg p-4 border border-white/5 flex items-center justify-between">
+      <div>
+        <%= link_to user.username, admin_user_path(user), class: "text-paper font-medium hover:text-carmine transition" %>
+        <p class="text-xs text-paper/40 mt-1">
+          <%= user.email %>
+          <% if user.banned? %>
+            <span class="text-carmine ml-2">· banned</span>
+          <% end %>
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <%= link_to "Edit", edit_admin_user_path(user),
+              class: "text-xs px-3 py-1.5 rounded bg-white/5 text-paper hover:bg-white/10" %>
+        <%= button_to (user.banned? ? "Unban" : "Ban"), ban_admin_user_path(user), method: :post,
+              class: "text-xs px-3 py-1.5 rounded #{user.banned? ? 'bg-white/5 text-paper' : 'bg-carmine/15 text-carmine'} hover:opacity-80" %>
+        <%= button_to "Delete", admin_user_path(user), method: :delete,
+              class: "text-xs px-3 py-1.5 rounded bg-carmine/15 text-carmine hover:bg-carmine hover:text-paper",
+              data: { turbo_confirm: "Are you sure?" } %>
+      </div>
+    </div>
+  <% end %>
+</div>

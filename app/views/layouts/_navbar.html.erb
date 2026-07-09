@@ -1,0 +1,50 @@
+<nav class="bg-ink border-b border-white/10 px-6 py-4">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <%= link_to "Scriptorium", root_path, class: "font-display text-2xl text-paper tracking-wide" %>
+
+    <div class="flex items-center gap-1 bg-white/5 rounded-full px-2 py-1">
+      <%= link_to t("navbar.articles"), articles_path,
+            class: "px-4 py-2 rounded-full text-sm text-paper/80 hover:text-paper hover:bg-white/10 transition" %>
+      <%= link_to t("navbar.new_article"), new_article_path,
+            class: "px-4 py-2 rounded-full text-sm text-paper/80 hover:text-paper hover:bg-white/10 transition" %>
+    </div>
+
+    <div class="flex items-center gap-1 text-xs">
+      <%= link_to "EN", url_for(locale: :en), class: "px-2 py-1 rounded #{I18n.locale == :en ? 'text-paper' : 'text-paper/40 hover:text-paper'}" %>
+      <span class="text-white/20">/</span>
+      <%= link_to "PL", url_for(locale: :pl), class: "px-2 py-1 rounded #{I18n.locale == :pl ? 'text-paper' : 'text-paper/40 hover:text-paper'}" %>
+    </div>
+
+    <% if logged_in? %>
+      <details class="relative">
+        <summary class="list-none
+                    [&::-webkit-details-marker]:hidden
+                    cursor-pointer flex items-center
+                    gap-2 px-3 py-2 rounded-full
+                    bg-white/5 hover:bg-white/10
+                    transition text-paper text-sm">
+          <span class="w-7 h-7 rounded-full bg-carmine
+                      flex items-center justify-center
+                      text-xs font-semibold">
+            <%= current_user.username.first.upcase %>
+          </span>
+          <%= current_user.username %>
+        </summary>
+        <div class="absolute right-0 mt-2 w-48 bg-[#2f2f2f] border border-white/10 rounded-lg shadow-xl overflow-hidden z-20">
+          <%= link_to t("account.user.my_profile"), user_path(current_user),
+                class: "block px-4 py-3 text-sm text-paper/80 hover:bg-white/5 hover:text-paper" %>
+          <%= link_to t("account.user.my_articles"), mine_articles_path,
+                class: "block px-4 py-3 text-sm text-paper/80 hover:bg-white/5 hover:text-paper" %>
+          <%= button_to t("navbar.log_out"), session_path, method: :delete,
+                class: "w-full text-left px-4 py-3 text-sm text-carmine hover:bg-white/5" %>
+        </div>
+      </details>
+    <% else %>
+      <div class="flex items-center gap-3">
+        <%= link_to t("navbar.log_in"), new_session_path, class: "text-sm text-paper/80 hover:text-paper" %>
+        <%= link_to t("navbar.sign_up"), new_user_path,
+              class: "text-sm bg-carmine text-paper px-4 py-2 rounded-full hover:bg-carmine/90 transition" %>
+      </div>
+    <% end %>
+  </div>
+</nav>
