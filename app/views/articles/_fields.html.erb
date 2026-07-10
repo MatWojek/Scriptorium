@@ -27,6 +27,24 @@
         class: "w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-paper text-sm placeholder:text-paper/25 focus:outline-none focus:border-carmine/50 focus:ring-1 focus:ring-carmine/15 transition" %>
 </div>
 
+<div>
+  <%= form.label :gallery_images, "Gallery images (optional)", class: "block text-sm text-paper/70 mb-2" %>
+
+  <% if article.gallery_images.attached? %>
+    <div class="grid grid-cols-4 gap-2 mb-3">
+      <% article.gallery_images.each do |img| %>
+        <div class="relative aspect-square rounded-lg overflow-hidden border border-white/10">
+          <%= image_tag img.variant(resize_to_fill: [150, 150]), class: "w-full h-full object-cover" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= form.file_field :gallery_images, multiple: true, accept: "image/png,image/jpeg,image/webp",
+        class: "w-full text-sm text-paper/70 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-carmine file:text-paper hover:file:bg-carmine/90 file:cursor-pointer" %>
+  <p class="mt-1.5 text-xs text-paper/30">You can select multiple images at once.</p>
+</div>
+
 <%# Content / rich text %>
 <div class="space-y-1.5">
   <%= form.label :content,

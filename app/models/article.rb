@@ -1,12 +1,17 @@
 class Article < ApplicationRecord
   belongs_to :user
   belongs_to :category
+  belongs_to :language, optional: true
+  
   has_rich_text :content
+
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :article_tags, dependent: :destroy
   has_many :tags, through: :article_tags
-  belongs_to :language, optional: true
+
+  has_many_attached :gallery_images 
+
   after_save :extract_hashtags
 
   def score
