@@ -1,49 +1,77 @@
-<nav class="bg-ink border-b border-white/10 px-6 py-4">
-  <div class="max-w-6xl mx-auto flex items-center justify-between">
-    <%= link_to "Scriptorium", root_path, class: "font-display text-2xl text-paper tracking-wide" %>
+<%# Top navbar — hidden on mobile (use _mobile_nav instead) %>
+<nav class="hidden md:flex bg-ink border-b border-white/10 px-6 py-3 sticky top-0 z-30 backdrop-blur-md">
+  <div class="max-w-6xl mx-auto w-full flex items-center gap-6">
 
+    <%# Logo %>
+    <%= link_to root_path, class: "font-display text-xl text-paper tracking-wide shrink-0 mr-2" do %>
+      Scriptorium
+    <% end %>
+
+    <%# Main nav links %>
     <div class="flex items-center gap-1 bg-white/5 rounded-full px-2 py-1">
       <%= link_to t("navbar.articles"), articles_path,
-            class: "px-4 py-2 rounded-full text-sm text-paper/80 hover:text-paper hover:bg-white/10 transition" %>
-      <%= link_to t("navbar.new_article"), new_article_path,
-            class: "px-4 py-2 rounded-full text-sm text-paper/80 hover:text-paper hover:bg-white/10 transition" %>
+            class: "px-4 py-1.5 rounded-full text-sm text-paper/80 hover:text-paper hover:bg-white/10 transition #{request.path == articles_path ? 'bg-white/10 text-paper' : ''}" %>
+      <% if logged_in? %>
+        <%= link_to t("navbar.new_article"), new_article_path,
+              class: "px-4 py-1.5 rounded-full text-sm text-paper/80 hover:text-paper hover:bg-white/10 transition #{request.path == new_article_path ? 'bg-white/10 text-paper' : ''}" %>
+      <% end %>
     </div>
 
-    <div class="flex items-center gap-1 text-xs">
-      <%= link_to "EN", url_for(locale: :en), class: "px-2 py-1 rounded #{I18n.locale == :en ? 'text-paper' : 'text-paper/40 hover:text-paper'}" %>
+    <%# Spacer %>
+    <div class="flex-1"></div>
+
+    <%# Language switcher %>
+    <div class="flex items-center gap-0.5 text-xs shrink-0">
+      <%= link_to "EN", url_for(locale: :en),
+            class: "px-2 py-1 rounded transition #{I18n.locale == :en ? 'text-paper font-semibold' : 'text-paper/40 hover:text-paper'}" %>
       <span class="text-white/20">/</span>
-      <%= link_to "PL", url_for(locale: :pl), class: "px-2 py-1 rounded #{I18n.locale == :pl ? 'text-paper' : 'text-paper/40 hover:text-paper'}" %>
+      <%= link_to "PL", url_for(locale: :pl),
+            class: "px-2 py-1 rounded transition #{I18n.locale == :pl ? 'text-paper font-semibold' : 'text-paper/40 hover:text-paper'}" %>
     </div>
 
+    <%# User area %>
     <% if logged_in? %>
-      <details class="relative">
-        <summary class="list-none
-                    [&::-webkit-details-marker]:hidden
-                    cursor-pointer flex items-center
-                    gap-2 px-3 py-2 rounded-full
-                    bg-white/5 hover:bg-white/10
-                    transition text-paper text-sm">
-          <span class="w-7 h-7 rounded-full bg-carmine
-                      flex items-center justify-center
-                      text-xs font-semibold">
-            <%= current_user.username.first.upcase %>
-          </span>
-          <%= current_user.username %>
+      <details class="relative group shrink-0">
+        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 transition text-paper text-sm select-none">
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar.variant(resize_to_fill: [56, 56]),
+                  class: "w-6 h-6 rounded-full object-cover ring-1 ring-white/10" %>
+          <% else %>
+            <span class="w-6 h-6 rounded-full bg-carmine flex items-center justify-center text-[11px] font-bold text-paper">
+              <%= current_user.username.first.upcase %>
+            </span>
+          <% end %>
+          <span class="max-w-[120px] truncate"><%= current_user.username %></span>
+          <%# Chevron %>
+          <svg class="w-3.5 h-3.5 text-paper/40 transition group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
         </summary>
-        <div class="absolute right-0 mt-2 w-48 bg-[#2f2f2f] border border-white/10 rounded-lg shadow-xl overflow-hidden z-20">
+
+        <div class="absolute right-0 mt-2 w-52 bg-[#252525] border border-white/10 rounded-xl shadow-2xl shadow-black/50 overflow-hidden z-40">
+          <%# Profile header in dropdown %>
+          <div class="px-4 py-3 border-b border-white/5">
+            <p class="text-xs text-paper/40 uppercase tracking-wider mb-0.5">Signed in as</p>
+            <p class="text-sm text-paper font-medium truncate"><%= current_user.username %></p>
+          </div>
+
           <%= link_to t("account.user.my_profile"), user_path(current_user),
-                class: "block px-4 py-3 text-sm text-paper/80 hover:bg-white/5 hover:text-paper" %>
+                class: "flex items-center gap-2 px-4 py-2.5 text-sm text-paper/75 hover:bg-white/5 hover:text-paper transition" %>
           <%= link_to t("account.user.my_articles"), mine_articles_path,
-                class: "block px-4 py-3 text-sm text-paper/80 hover:bg-white/5 hover:text-paper" %>
-          <%= button_to t("navbar.log_out"), session_path, method: :delete,
-                class: "w-full text-left px-4 py-3 text-sm text-carmine hover:bg-white/5" %>
+                class: "flex items-center gap-2 px-4 py-2.5 text-sm text-paper/75 hover:bg-white/5 hover:text-paper transition" %>
+
+          <div class="border-t border-white/5 mt-1">
+            <%= button_to t("navbar.log_out"), session_path, method: :delete,
+                  class: "w-full text-left px-4 py-2.5 text-sm text-carmine hover:bg-white/5 transition" %>
+          </div>
         </div>
       </details>
     <% else %>
-      <div class="flex items-center gap-3">
-        <%= link_to t("navbar.log_in"), new_session_path, class: "text-sm text-paper/80 hover:text-paper" %>
+      <div class="flex items-center gap-3 shrink-0">
+        <%= link_to t("navbar.log_in"), new_session_path,
+              class: "text-sm text-paper/70 hover:text-paper transition" %>
         <%= link_to t("navbar.sign_up"), new_user_path,
-              class: "text-sm bg-carmine text-paper px-4 py-2 rounded-full hover:bg-carmine/90 transition" %>
+              class: "text-sm bg-carmine text-paper px-4 py-1.5 rounded-full hover:bg-carmine/85 active:scale-95 transition" %>
       </div>
     <% end %>
   </div>

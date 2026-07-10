@@ -1,0 +1,34 @@
+<h1 class="font-display text-2xl text-paper mb-6">Audit logs</h1>
+
+<%= form_with url: admin_audit_logs_path, method: :get, class: "mb-6" do %>
+  <%= select_tag :action_type,
+        options_for_select([
+          ["All actions", nil],
+          ["User created", "user_created"], ["User updated", "user_updated"], ["User deleted", "user_deleted"],
+          ["Login", "user_login"],
+          ["Comment created", "comment_created"], ["Comment updated", "comment_updated"], ["Comment deleted", "comment_deleted"],
+          ["Article created", "article_created"], ["Article updated", "article_updated"], ["Article deleted", "article_deleted"]
+        ], params[:action_type]),
+        class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm",
+        onchange: "this.form.requestSubmit()" %>
+<% end %>
+
+<div class="space-y-2">
+  <% @logs.each do |log| %>
+    <div class="bg-[#2f2f2f] rounded-lg px-4 py-3 border border-white/5 flex items-center justify-between text-sm">
+      <div>
+        <span class="text-carmine font-medium"><%= log.action %></span>
+        <span class="text-paper/60"> by <%= log.user&.username || "system" %></span>
+        <% if log.target_type %>
+          <span class="text-paper/40"> on <%= log.target_type %> ##<%= log.target_id %></span>
+        <% end %>
+        <% if log.details.present? %>
+          <p class="text-xs text-paper/30 mt-1">"<%= log.details %>"</p>
+        <% end %>
+      </div>
+      <div class="text-xs text-paper/30 shrink-0 ml-4">
+        <%= log.created_at.strftime("%Y-%m-%d %H:%M") %> · IP: <%= log.ip_address %>
+      </div>
+    </div>
+  <% end %>
+</div>

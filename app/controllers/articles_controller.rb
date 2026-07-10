@@ -6,6 +6,7 @@ class ArticlesController < ApplicationController
   def index
     @articles = Article.all
 
+    @articles = @articles.where("title LIKE ?", "%#{params[:q]}%") if params[:q].present?
     @articles = @articles.where(category_id: params[:category_id]) if params[:category_id].present?
     @articles = @articles.where(language_id: params[:language_id]) if params[:language_id].present?
 
@@ -41,6 +42,7 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       if @article.save
+        AuditLog.record(action: "article_created", user: current_user, target: @article, ip: request.remote_ip)
         format.html { redirect_to @article, notice: "Article was successfully created." }
         format.json { render :show, status: :created, location: @article }
       else
@@ -54,6 +56,7 @@ class ArticlesController < ApplicationController
   def update
     respond_to do |format|
       if @article.update(article_params)
+        AuditLog.record(action: "article_updated", user: current_user, target: @article, ip: request.remote_ip)
         format.html { redirect_to @article, notice: "Article was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @article }
       else
@@ -68,6 +71,7 @@ class ArticlesController < ApplicationController
     @article.destroy!
 
     respond_to do |format|
+      AuditLog.record(action: "article_deleted", user: current_user, target: @article, ip: request.remote_ip, details: @article.title)
       format.html { redirect_to articles_path, notice: "Article was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end

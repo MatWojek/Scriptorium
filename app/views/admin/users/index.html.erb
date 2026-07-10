@@ -1,3 +1,22 @@
+<%= form_with url: admin_users_path, method: :get, class: "flex flex-wrap gap-3 mb-6" do %>
+  <%= text_field_tag :q, params[:q],
+        placeholder: "Search by username or email...",
+        class: "flex-1 min-w-[200px] bg-[#2f2f2f] border border-white/10 rounded-lg px-4 py-2 text-paper text-sm focus:outline-none focus:border-carmine transition" %>
+
+  <%= select_tag :role_id,
+        options_for_select([["All roles", nil]] + Role.all.map { |r| [r.translated_name, r.id] }, params[:role_id]),
+        class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm" %>
+
+  <%= select_tag :status,
+        options_for_select([["All statuses", nil], ["Banned", "banned"], ["Admins", "admin"]], params[:status]),
+        class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm" %>
+
+  <%= select_tag :sort,
+        options_for_select([["Newest", nil], ["Oldest", "oldest"], ["Reputation", "reputation"]], params[:sort]),
+        class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm" %>
+
+  <%= submit_tag "Filter", class: "bg-carmine text-paper px-4 py-2 rounded-lg text-sm font-medium hover:bg-carmine/90 transition cursor-pointer" %>
+<% end %>
 <h1 class="font-display text-2xl text-paper mb-6">Users</h1>
 
 <div class="space-y-3">

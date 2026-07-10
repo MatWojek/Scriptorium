@@ -1,11 +1,17 @@
 class UsersController < ApplicationController
   before_action :require_login, only: %i[ edit update destroy ]
+  before_action :require_admin, only: [:index]
   before_action :set_user, only: %i[ show edit update destroy ]
   layout "auth", only: %i[ new create ]
   
   # GET /users or /users.json
   def index
-    @users = User.all
+    unless current_user&.admin?
+      redirect_to root_path, alert: "You are not authorized to view this page."
+      return
+    end
+
+    @users = User.order(created_at: :desc)
   end
 
   # GET /users/1 or /users/1.json
@@ -30,6 +36,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         session[:user_id] = @user.id
+        AuditLog.record(action: "user_created", user: @user, target: @user, ip: request.remote_ip)
         format.html { redirect_to @user, notice: "User was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
@@ -37,12 +44,16 @@ class UsersController < ApplicationController
         format.json { render json: @user.errors, status: :unprocessable_content }
       end
     end
+  rescue ActiveRecord::RecordNotUnique
+    @user.errors.add(:email, "is already registered")
+    render :new, status: :uprocessable_content
   end
 
   # PATCH/PUT /users/1 or /users/1.json
   def update
     respond_to do |format|
       if @user.update(user_params)
+        AuditLog.record(action: "user_updated", user: current_user, target: @user, ip: request.remote_ip)
         format.html { redirect_to @user, notice: "User was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @user }
       else
@@ -57,6 +68,7 @@ class UsersController < ApplicationController
     @user.destroy!
 
     respond_to do |format|
+      AuditLog.record(action: "user_deleted", user: current_user, target: @user, ip: request.remote_ip, details: @user.username)
       format.html { redirect_to users_path, notice: "User was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
@@ -79,7 +91,7 @@ class UsersController < ApplicationController
           :first_name, 
           :last_name, 
           :bio, 
-          :role, 
+          :role_id, 
           :avatar, 
           :language_id,
           :avatar, 

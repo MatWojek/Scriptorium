@@ -1,0 +1,44 @@
+<% content_for :title, "Change password" %>
+
+<div class="w-full max-w-sm mx-auto mt-10" data-controller="password-check">
+  <h1 class="font-display text-2xl text-paper mb-6">Change password</h1>
+
+  <%= form_with url: password_path, method: :patch, class: "space-y-5" do %>
+    <% if current_user.errors.any? %>
+      <div class="bg-carmine/10 border border-carmine/30 text-carmine text-sm rounded-lg px-4 py-3">
+        <% current_user.errors.full_messages.each do |msg| %>
+          <p><%= msg %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= label_tag :current_password, "Current password", class: "block text-sm text-paper/70 mb-2" %>
+      <%= password_field_tag :current_password, nil, class: "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+    </div>
+
+    <div>
+      <%= label_tag "user_password", "New password", class: "block text-sm text-paper/70 mb-2" %>
+      <%= password_field_tag "user[password]", nil,
+            data: { password_check_target: "password", action: "input->password-check#check" },
+            class: "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+      <ul class="mt-2 space-y-1 text-xs">
+        <li data-password-check-target="length" class="text-paper/30">At least 8 characters</li>
+        <li data-password-check-target="lowercase" class="text-paper/30">One lowercase letter</li>
+        <li data-password-check-target="uppercase" class="text-paper/30">One uppercase letter</li>
+        <li data-password-check-target="digit" class="text-paper/30">One number</li>
+        <li data-password-check-target="symbol" class="text-paper/30">One symbol</li>
+      </ul>
+    </div>
+
+    <div>
+      <%= label_tag "user_password_confirmation", "Confirm new password", class: "block text-sm text-paper/70 mb-2" %>
+      <%= password_field_tag "user[password_confirmation]", nil,
+            data: { password_check_target: "confirmation", action: "input->password-check#checkMatch" },
+            class: "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+      <p data-password-check-target="message" class="mt-1.5 text-xs text-carmine/80"></p>
+    </div>
+
+    <%= submit_tag "Update password", class: "w-full bg-carmine text-paper py-3 rounded-lg font-medium hover:bg-carmine/90 transition cursor-pointer" %>
+  <% end %>
+</div>

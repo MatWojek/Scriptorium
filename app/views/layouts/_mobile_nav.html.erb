@@ -1,0 +1,80 @@
+<%# Bottom mobile nav — visible only on small screens %>
+<nav class="fixed bottom-0 inset-x-0 z-40 md:hidden bg-[#1e1e1e] border-t border-white/10 safe-area-inset-bottom">
+  <div class="flex items-center justify-around px-2 py-1.5">
+
+    <%# Articles %>
+    <%= link_to articles_path,
+          class: "flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl transition #{request.path == articles_path ? 'text-carmine' : 'text-paper/50 hover:text-paper'}" do %>
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <span class="text-[9px] font-medium tracking-wide"><%= t("navbar.articles") %></span>
+    <% end %>
+
+    <%# Search %>
+    <%= link_to articles_path(anchor: "search"),
+          class: "flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl text-paper/50 hover:text-paper transition" do %>
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <span class="text-[9px] font-medium tracking-wide">Search</span>
+    <% end %>
+
+    <%# New article — centre FAB-style %>
+    <% if logged_in? %>
+      <%= link_to new_article_path,
+            class: "flex flex-col items-center gap-0.5 px-3 py-1 text-paper" do %>
+        <div class="w-10 h-10 rounded-full bg-carmine flex items-center justify-center shadow-lg shadow-carmine/30 -mt-4 ring-4 ring-[#1e1e1e]">
+          <svg class="w-5 h-5 text-paper" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <span class="text-[9px] font-medium tracking-wide text-paper/50 mt-0.5">New</span>
+      <% end %>
+    <% else %>
+      <%# Trending replaces "New" for logged-out users %>
+      <%= link_to articles_path(sort: "most_liked"),
+            class: "flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl text-paper/50 hover:text-paper transition" do %>
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+        <span class="text-[9px] font-medium tracking-wide">Trending</span>
+      <% end %>
+    <% end %>
+
+    <%# Trending (only for logged-in, since they already have "New") %>
+    <% if logged_in? %>
+      <%= link_to articles_path(sort: "most_liked"),
+            class: "flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl text-paper/50 hover:text-paper transition" do %>
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+        <span class="text-[9px] font-medium tracking-wide">Top</span>
+      <% end %>
+    <% end %>
+
+    <%# Profile / Login %>
+    <% if logged_in? %>
+      <%= link_to user_path(current_user),
+            class: "flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl #{request.path == user_path(current_user) ? 'text-carmine' : 'text-paper/50 hover:text-paper'} transition" do %>
+        <% if current_user.avatar.attached? %>
+          <%= image_tag current_user.avatar.variant(resize_to_fill: [40, 40]),
+                class: "w-5 h-5 rounded-full object-cover" %>
+        <% else %>
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        <% end %>
+        <span class="text-[9px] font-medium tracking-wide">Profile</span>
+      <% end %>
+    <% else %>
+      <%= link_to new_session_path,
+            class: "flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl text-paper/50 hover:text-paper transition" do %>
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+        </svg>
+        <span class="text-[9px] font-medium tracking-wide">Log in</span>
+      <% end %>
+    <% end %>
+  </div>
+</nav>

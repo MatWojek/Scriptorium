@@ -12,6 +12,7 @@ class SessionsController < ApplicationController
       render :new, status: :forbidden
     elsif user&.authenticate(params[:password])
       session[:user_id] = user.id
+      AuditLog.record(action: "user_login", user: user, ip: request.remote_ip)
       redirect_to root_path, notice: "Zalogowano pomyślnie"
     else
       flash.now[:alert] = "Nieprawidłowy email lub hasło"

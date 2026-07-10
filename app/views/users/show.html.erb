@@ -1,83 +1,157 @@
 <% content_for :title, @user.username %>
 
-<div class="w-4/5 mx-auto max-w-3xl">
-  <div class="bg-[#2f2f2f] rounded-xl p-8 border border-white/5 mb-8">
-    <div class="flex items-start justify-between mb-4">
+<div class="w-full max-w-3xl mx-auto px-4 pt-8 pb-28 md:pb-16">
+
+  <%# ── Profile card ── %>
+  <div class="bg-[#252525] rounded-2xl border border-white/8 p-6 md:p-8 mb-8 shadow-xl shadow-black/20">
+
+    <%# Avatar + name row %>
+    <div class="flex items-start justify-between gap-4 mb-5">
       <div class="flex items-center gap-4">
         <% if @user.avatar.attached? %>
-          <%= image_tag @user.avatar.variant(resize_to_fill: [64, 64]), class: "w-16 h-16 rounded-full object-cover border border-white/10" %>
+          <%= image_tag @user.avatar.variant(resize_to_fill: [80, 80]),
+                class: "w-16 h-16 md:w-20 md:h-20 rounded-full object-cover ring-2 ring-white/10 shrink-0" %>
         <% else %>
-          <div class="w-16 h-16 rounded-full bg-carmine flex items-center justify-center text-xl font-semibold text-paper">
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-carmine/90 flex items-center justify-center text-2xl font-bold text-paper shrink-0">
             <%= @user.username.first.upcase %>
           </div>
         <% end %>
 
         <div>
-          <h1 class="font-display text-3xl text-paper mb-1"><%= @user.username %></h1>
-          <p class="text-sm text-paper/40">
-            <%= @user.first_name %> <%= @user.last_name %>
-            <% if @user.role %> · <%= @user.role.name %><% end %>
+          <h1 class="font-display text-2xl md:text-3xl text-paper leading-tight"><%= @user.username %></h1>
+          <p class="text-sm text-paper/40 mt-0.5">
+            <% if @user.first_name.present? || @user.last_name.present? %>
+              <%= [@user.first_name, @user.last_name].compact.join(" ") %>
+            <% end %>
+            <% if @user.role %>
+              <% if @user.first_name.present? || @user.last_name.present? %>
+                <span class="text-paper/20 mx-1">·</span>
+              <% end %>
+              <span class="inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-carmine/10 text-carmine border border-carmine/20 align-middle">
+                <%= @user.role.translated_name %>
+              </span>
+            <% end %>
           </p>
         </div>
       </div>
 
-      <div class="text-right">
+      <%# Reputation badge %>
+      <div class="text-right shrink-0">
         <p class="font-display text-2xl text-carmine"><%= @user.reputation %></p>
-        <p class="text-xs text-paper/40 uppercase tracking-wider">Reputation</p>
+        <p class="text-[10px] text-paper/35 uppercase tracking-wider">Reputation</p>
       </div>
     </div>
 
+    <%# Bio %>
     <% if @user.bio.present? %>
-      <p class="text-sm text-paper/70 leading-relaxed border-t border-white/5 pt-4 mb-4"><%= @user.bio %></p>
+      <p class="text-sm text-paper/70 leading-relaxed border-t border-white/5 pt-5 mb-5"><%= @user.bio %></p>
     <% end %>
 
+    <%# Own-account private info + actions %>
     <% if current_user == @user %>
-      <%# Private information %>
-      <div class="border-t border-white/5 pt-4 mb-4 text-sm text-paper/60 space-y-1">
-        <p><span class="text-paper/40">Email:</span> <%= @user.email %></p>
-        <p><span class="text-paper/40">Articles written:</span> <%= @articles.size %></p>
-        <p><span class="text-paper/40">Comments written:</span> <%= @user.comments.count %></p>
-      </div>
+      <div class="border-t border-white/5 pt-5">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm text-paper/60 mb-5">
+          <div>
+            <span class="text-[10px] uppercase tracking-widest text-paper/30 block mb-0.5">Email</span>
+            <span class="text-paper/70"><%= @user.email %></span>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-widest text-paper/30 block mb-0.5">Articles</span>
+            <span class="text-paper/70"><%= @articles.size %></span>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-widest text-paper/30 block mb-0.5">Comments</span>
+            <span class="text-paper/70"><%= @user.comments.count %></span>
+          </div>
+        </div>
 
-      <div class="flex flex-wrap gap-2 border-t border-white/5 pt-4">
-        <%= link_to t("account.user.edit_user_info"), edit_user_path(@user),
-              class: "px-5 py-2.5 rounded-lg text-sm font-medium bg-white/5 text-paper hover:bg-white/10 transition" %>
-        <% if current_user.admin? %>
-          <%= link_to t("account.admin.back_to_users"), admin_users_path,
-                class: "px-5 py-2.5 rounded-lg text-sm font-medium text-paper/50 hover:text-paper hover:bg-white/5 transition" %>
-        <% end %>
-        <%= button_to t("account.user.delete_user"), @user, method: :delete,
-              form_class: "inline-block",
-              class: "bg-carmine/15 text-carmine border border-carmine/30 px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-carmine hover:text-paper hover:border-carmine transition",
-              data: { turbo_confirm: t("base.confirm") } %>
+        <div class="flex flex-wrap gap-2">
+          <%= link_to t("account.user.edit_user_info"), edit_user_path(@user),
+                class: "px-4 py-2 rounded-lg text-sm font-medium bg-white/5 text-paper hover:bg-white/10 transition" %>
+          <%= link_to "Change password", edit_password_path,
+                class: "px-4 py-2 rounded-lg text-sm font-medium bg-white/5 text-paper hover:bg-white/10 transition" %>
+          <% if current_user.admin? %>
+            <%= link_to t("account.admin.back_to_users"), admin_users_path,
+                  class: "px-4 py-2 rounded-lg text-sm font-medium text-paper/40 hover:text-paper hover:bg-white/5 transition" %>
+          <% end %>
+          <%= button_to t("account.user.delete_user"), @user, method: :delete,
+                form_class: "inline-block",
+                class: "bg-carmine/10 text-carmine border border-carmine/25 px-4 py-2 rounded-lg text-sm font-medium hover:bg-carmine hover:text-paper hover:border-carmine transition",
+                data: { turbo_confirm: t("base.confirm") } %>
+        </div>
       </div>
     <% end %>
   </div>
 
-  <h2 class="font-display text-xl text-paper mb-4">Articles</h2>
-  <% if @articles.empty? %>
-    <p class="text-sm text-paper/40 mb-8">No articles yet.</p>
-  <% else %>
-    <div class="space-y-4 mb-8">
-      <% @articles.each do |article| %>
-        <%= render article %>
+  <%# ── Articles section ── %>
+  <div class="mb-10">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-display text-xl text-paper">Articles</h2>
+      <% if current_user == @user && @articles.any? %>
+        <%= link_to new_article_path,
+              class: "inline-flex items-center gap-1.5 text-sm text-paper/50 hover:text-carmine transition" do %>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          <%= t("navbar.new_article") %>
+        <% end %>
       <% end %>
     </div>
-  <% end %>
 
-  <h2 class="font-display text-xl text-paper mb-4">Recent comments</h2>
-  <% if @comments.empty? %>
-    <p class="text-sm text-paper/40">No comments yet.</p>
-  <% else %>
-    <div class="space-y-3">
-      <% @comments.each do |comment| %>
-        <div class="bg-[#2f2f2f] rounded-lg p-4 border border-white/5">
-          <p class="text-xs text-paper/40 mb-2">
-            on <%= link_to comment.article.title, comment.article, class: "text-carmine hover:underline" %>
-          </p>
-          <p class="text-sm text-paper/75"><%= comment.content %></p>
+    <% if @articles.empty? %>
+      <div class="bg-[#252525] rounded-2xl border border-white/8 px-6 py-10 text-center">
+        <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-paper/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v8m0 0v8m0-8h8m-8 0H4" />
+          </svg>
         </div>
-      <% end %>
-    </div>
-  <% end %>
+        <p class="text-sm text-paper/40 mb-4">
+          <% if current_user == @user %>
+            You haven't written any articles yet.
+          <% else %>
+            No articles yet.
+          <% end %>
+        </p>
+        <% if current_user == @user %>
+          <%= link_to new_article_path,
+                class: "inline-flex items-center gap-2 bg-carmine/10 text-carmine border border-carmine/25 px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-carmine hover:text-paper hover:border-carmine transition" do %>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Write your first article
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="space-y-4">
+        <% @articles.each do |article| %>
+          <%= render article %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── Recent comments section ── %>
+  <div>
+    <h2 class="font-display text-xl text-paper mb-4">Recent comments</h2>
+    <% if @comments.empty? %>
+      <p class="text-sm text-paper/35 py-4">No comments yet.</p>
+    <% else %>
+      <div class="space-y-3">
+        <% @comments.each do |comment| %>
+          <div class="bg-[#252525] rounded-xl p-4 border border-white/5 hover:border-white/10 transition">
+            <p class="text-xs text-paper/35 mb-2">
+              on <%= link_to comment.article.title, comment.article,
+                        class: "text-carmine hover:underline underline-offset-2" %>
+            </p>
+            <p class="text-sm text-paper/75 leading-relaxed"><%= comment.content %></p>
+            <div class="flex items-center justify-end mt-2 pt-2 border-t border-white/5">
+              <span class="text-xs text-paper/35"><%= comment.score %> pts</span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
 </div>

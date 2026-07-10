@@ -1,5 +1,25 @@
 <h1 class="font-display text-2xl text-paper mb-6">Articles</h1>
 
+<%= form_with url: admin_articles_path, method: :get, class: "flex flex-wrap gap-3 mb-6" do %>
+  <%= text_field_tag :q, params[:q],
+        placeholder: "Search by title...",
+        class: "flex-1 min-w-[200px] bg-[#2f2f2f] border border-white/10 rounded-lg px-4 py-2 text-paper text-sm focus:outline-none focus:border-carmine transition" %>
+
+  <%= select_tag :category_id,
+        options_for_select([["All categories", nil]] + Category.all.map { |c| [c.name, c.id] }, params[:category_id]),
+        class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm" %>
+
+  <%= select_tag :language_id,
+        options_for_select([["All languages", nil]] + Language.all.map { |l| [l.name, l.id] }, params[:language_id]),
+        class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm" %>
+
+  <%= select_tag :sort,
+        options_for_select([["Newest", nil], ["Oldest", "oldest"], ["Most liked", "most_liked"]], params[:sort]),
+        class: "bg-[#2f2f2f] border border-white/10 rounded-lg px-3 py-2 text-paper text-sm" %>
+
+  <%= submit_tag "Filter", class: "bg-carmine text-paper px-4 py-2 rounded-lg text-sm font-medium hover:bg-carmine/90 transition cursor-pointer" %>
+<% end %>
+
 <div class="space-y-3">
   <% @articles.each do |article| %>
     <div class="bg-[#2f2f2f] rounded-lg p-4 border border-white/5 flex items-center justify-between">
@@ -7,6 +27,7 @@
         <%= link_to article.title, article, class: "text-paper font-medium hover:text-carmine transition" %>
         <p class="text-xs text-paper/40 mt-1">
           <%= article.user&.username || "Unknown" %> · <%= article.created_at.strftime("%Y-%m-%d") %>
+          <% if article.category %> · <%= article.category.name %><% end %>
         </p>
       </div>
       <%= button_to "Delete", admin_article_path(article), method: :delete,

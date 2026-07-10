@@ -65,3 +65,8 @@ pl:
     admin: 
       back_to_users: "Powrót do użytkowników"
       destroy_this_user: "Usuń tego użytkownika"
+  roles:
+    teacher: "Nauczyciel"
+    programmer: "Programista"
+    journalist: "Dziennikarz"
+    writer: "Pisarz"

@@ -18,8 +18,22 @@ Language.find_or_create_by!(code: "en") { |l| l.name = "English" }
 Language.find_or_create_by!(code: "pl") { |l| l.name = "Polski" }
 
 # Role
-Role.find_or_create_by!(name: "Programmer", description: "Builds software and applications")
-Role.find_or_create_by!(name: "Writer", description: "Writes books and articles")
-Role.find_or_create_by!(name: "Teacher", description: "Educates students")
-Role.find_or_create_by!(name: "Journalist", description: "Published news")
+Role.find_or_create_by!(code: "programmer") do |r|
+  r.name = "Programmer"
+  r.description = "Builds software and applications"
+end
 
+Role.find_or_create_by!(code: "writer") do |r|
+  r.name = "Writer"
+  r.description = "Writes books and articles"
+end
+
+Role.find_or_create_by!(code: "teacher") do |r|
+  r.name = "Teacher"
+  r.description = "Educates students"
+end
+
+Role.find_or_create_by!(code: "journalist") do |r|
+  r.name = "Journalist"
+  r.description = "Published news"
+end

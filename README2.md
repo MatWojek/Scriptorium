@@ -35,32 +35,48 @@ bin/rails db:seed
 
 bin/dev
 
+### Admin 
+
+```bash
+bin/rails console
+User.find_by(username: "your_name").update(admin: true) # or User.find_by(email: "your@mail.com").update(admin: true)
+
+```
+
 # Install to use image
 
 sudo apt install libvips
 
-Panel Administracyjny
-localhost:3000/admin
+### Things done:
 
-Add likes to show comment
-Add likes to articles
-Add searchbar add filters 
-Add change password content to put old password and then change
+- Register and Login User
 
-Posty - admin/post
-Commentarze admin/post/:id/comments
-routes.rb namespace:
-who, when, from what ip
-action ban - after ip
+   - regex the email and password
+   - edit user information
 
-user public profile
+- Create, edit, delete articles,
+- Interface changes language
+- Administration panel
 
-Add private articles for groups of user
+   - dashboard
+   - delete, edit user
+   - delete, edit articles
+   - delete, edit comments
+   - can ban user by IP
 
-avatar to user
-and galery.js for more images
-
-Filters (article filters from category, tags, likes and something like that)
+-[] Add regex that tags, and alter text from images is not in content _article
+-[] Add application view with buttons downbar
+-[x] Add likes to show comment
+-[x] Add likes to articles
+-[x] Add searchbar add filters
+-[x] Add avatar to navbar
+-[] Add change password content to put old password and then change
+-[] Add galery image (galery.js)
+-[x] Add regex for email
+-[x] Add information to inconfirmed registration data
+-[] Add exception to create account to the same email, and throw info
+-[] Add private articles for groups of user
+-[] Add logs to admin panel
 
 tiny.pl/bn74t0q-d - click
 https://admin.shopify.com/store/dev-matt-x0hwu1rq

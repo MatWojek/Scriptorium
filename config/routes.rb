@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   # Admin panel 
   namespace :admin do
     root "dashboard#index"
+    resources :audit_logs, only: [:index]
     resources :articles, only: [:index, :destroy]
     resources :comments, only: [:index, :destroy] do
       member { post :ban }
@@ -16,6 +17,8 @@ Rails.application.routes.draw do
     resources :languages
     resources :categories
     resources :roles
+
+    resource :password, only: [:edit, :update], controller: "passwords"
 
     resource :session, only: [:new, :create, :destroy]
 

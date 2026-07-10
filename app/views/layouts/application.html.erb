@@ -19,10 +19,11 @@
   <body class="bg-ink font-body">
     <%= render "layouts/navbar" %>
 
-    <main class="max-w-6xl mx-auto px-6 py-10">
+    <main class="max-w-6xl mx-auto px-6 py-10 pb-24 md:pb-10">
       <%= render "layouts/flash" %>
 
       <%= yield %>
     </main>
+    <%= render "layouts/mobile_nav" %>
   </body>
 </html>

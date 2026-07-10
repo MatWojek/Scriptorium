@@ -67,3 +67,8 @@ en:
     admin: 
       back_to_users: "Back to Users"
       destroy_this_user: "Destroy this user"
+  roles:
+    teacher: "Teacher"
+    programmer: "Programmer"
+    journalist: "Journalist"
+    writer: "Writer"

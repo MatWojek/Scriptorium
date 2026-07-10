@@ -4,6 +4,23 @@ module Admin
 
     def index
       @users = User.order(created_at: :desc)
+
+      @users = @users.where("username LIKE :q OR email LIKE :q", q: "%#{params[:q]}%") if params[:q].present?
+      @users = @users.where(role_id: params[:role_id]) if params[:role_id].present?
+
+      case params[:status]
+      when "banned"
+        @users = @users.where(banned: true)
+      when "admin"
+        @users = @users.where(admin: true)
+      end
+
+      case params[:sort]
+      when "reputation"
+        @users = @users.sort_by(&:reputation).reverse
+      when "oldest"
+        @users = @users.reorder(created_at: :asc)
+      end
     end
 
     def show
@@ -28,6 +45,14 @@ module Admin
     def ban
       @user.update(banned: !@user.banned)
       status = @user.banned? ? "banned" : "unbanned"
+
+       AuditLog.record(
+        action: "user_#{status}",
+        user: current_user,
+        target: @user,
+        ip: request.remote_ip
+      )
+
       redirect_to admin_users_path, notice: "User #{@user.username} has been #{status}."
     end
 

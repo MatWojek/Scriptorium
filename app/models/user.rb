@@ -7,13 +7,9 @@ class User < ApplicationRecord
   belongs_to :language, optional: true
   belongs_to :role, optional: true
 
-  has_one :profile, dependent: :destroy
-
   has_many :articles, dependent: :destroy
   has_many :comments
   has_many :likes, dependent: :destroy
-  has_many :ratings_received, class_name: "UserRating", foreign_key: :user_id, dependent: :destroy
-  has_many :ratings_given, class_name: "UserRating", foreign_key: :rater_id, dependent: :destroy
   has_many :comment_ratings,
          class_name: "CommentRating",
          foreign_key: :rater_id,
@@ -25,9 +21,16 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true,
           format: { with: EMAIL_REGEX, message: "must be a valid email address" }
 
+  validates :email, presence: true,
+            uniqueness: { case_sensitive: false, message: "is already registered" },
+            format: { with: EMAIL_REGEX, message: "must be a valid email address" }
+
+  validates :username, presence: true,
+  uniqueness: { case_sensitive: false, message: "is already taken" }
+
   validates :password, format: {
-    with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}\z/,
-    message: "must be at least 8 characters and include uppercase, lowercase, and a number"
+    with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9\s]).{8,}\z/,
+    message: "must include uppercase, lowercase, a number, and a symbol"
   }, if: -> { password.present? }
 
   # Averange score of all write comments

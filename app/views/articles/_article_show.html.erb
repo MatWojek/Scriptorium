@@ -27,6 +27,29 @@
         target: "_blank", rel: "noopener" %>
   </div>
 
+  <%# Images gallery %>
+  <% images = article_images(article) %>
+  <% if images.any? %>
+    <div class="grid grid-cols-3 gap-2 mb-8" data-controller="gallery">
+      <% images.each_with_index do |img, i| %>
+        <button type="button" data-action="gallery#open" data-index="<%= i %>"
+              data-gallery-url="<%= url_for(img) %>"
+              class="block aspect-square overflow-hidden rounded-lg border border-white/5">
+          <%= image_tag img.variant(resize_to_fill: [300, 300]), class: "w-full h-full object-cover hover:opacity-80 transition" %>
+        </button>
+      <% end %>
+
+      <div data-gallery-target="modal" data-close="true" data-action="click->gallery#close"
+            class="hidden fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-6">
+        <button type="button" data-close="true" data-action="gallery#close" class="absolute top-6 right-6 text-paper text-2xl">×</button>
+        <button type="button" data-action="gallery#prev" class="absolute left-6 text-paper text-3xl">‹</button>
+        <img data-gallery-target="image" src="" class="max-h-[85vh] max-w-[85vw] object-contain rounded-lg">
+        <button type="button" data-action="gallery#next" class="absolute right-6 text-paper text-3xl">›</button>
+      </div>
+    </div>
+  <% end %>
+
+
   <div class="prose prose-invert max-w-none
       prose-p:text-paper/80 prose-p:leading-relaxed
       prose-headings:text-paper prose-headings:font-display

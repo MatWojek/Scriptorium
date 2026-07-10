@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_08_124648) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_10_093146) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -70,6 +70,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_08_124648) do
     t.index ["user_id"], name: "index_articles_on_user_id"
   end
 
+  create_table "audit_logs", force: :cascade do |t|
+    t.string "action"
+    t.datetime "created_at", null: false
+    t.text "details"
+    t.string "ip_address"
+    t.integer "target_id"
+    t.string "target_type"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_audit_logs_on_user_id"
+  end
+
   create_table "banned_ips", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -126,6 +138,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_08_124648) do
   end
 
   create_table "roles", force: :cascade do |t|
+    t.string "code"
     t.datetime "created_at", null: false
     t.text "description"
     t.string "icon"
@@ -153,6 +166,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_08_124648) do
     t.integer "role_id"
     t.datetime "updated_at", null: false
     t.string "username"
+    t.index "LOWER(email)", name: "index_users_on_lower_email", unique: true
+    t.index "LOWER(username)", name: "index_users_on_lower_username", unique: true
     t.index ["language_id"], name: "index_users_on_language_id"
     t.index ["role_id"], name: "index_users_on_role_id"
   end
@@ -164,6 +179,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_08_124648) do
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "languages"
   add_foreign_key "articles", "users"
+  add_foreign_key "audit_logs", "users"
   add_foreign_key "comment_ratings", "comments"
   add_foreign_key "comment_ratings", "users", column: "rater_id"
   add_foreign_key "comments", "articles"

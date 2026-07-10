@@ -1,28 +1,48 @@
 <% content_for :title, "Users" %>
 
-<div class="w-full">
+<div class="w-4/5 mx-auto">
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Users</h1>
-    <%= link_to "New user", new_user_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+  <div class="flex items-center justify-between mb-8 pb-6 border-b border-white/5">
+    <h1 class="font-display text-3xl text-paper">Users</h1>
+    <%= link_to "New user", new_user_path,
+          class: "bg-carmine text-paper px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-carmine/85 active:scale-95 transition" %>
   </div>
 
-  <div id="users" class="min-w-full divide-y divide-gray-200 space-y-5">
-    <% if @users.any? %>
+  <% if @users.any? %>
+    <div class="space-y-3">
       <% @users.each do |user| %>
-        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
-          <%= render user %>
-          <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
-            <% if user.role %>
-              <%= link_to t("account.back_to_user"), user, class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+        <div class="bg-[#2f2f2f] rounded-lg p-4 border border-white/5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <% if user.avatar.attached? %>
+              <%= image_tag user.avatar.variant(resize_to_fill: [40, 40]), class: "w-10 h-10 rounded-full object-cover border border-white/10" %>
             <% else %>
-            <%= link_to t("navbar.edit_user_info"), edit_user_path(user), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= button_to "Destroy", user, method: :delete, class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+              <div class="w-10 h-10 rounded-full bg-carmine flex items-center justify-center text-sm font-semibold text-paper">
+                <%= user.username.first.upcase %>
+              </div>
+            <% end %>
+            <div>
+              <%= link_to user.username, user, class: "text-paper font-medium hover:text-carmine transition" %>
+              <p class="text-xs text-paper/40"><%= user.email %></p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <%= link_to "Edit", edit_user_path(user),
+                  class: "text-xs px-3 py-1.5 rounded-lg bg-white/5 text-paper hover:bg-white/10 transition" %>
+            <%= button_to "Delete", user, method: :delete,
+                  class: "text-xs px-3 py-1.5 rounded-lg bg-carmine/15 text-carmine hover:bg-carmine hover:text-paper transition",
+                  form_class: "inline-block",
+                  data: { turbo_confirm: "Are you sure?" } %>
           </div>
         </div>
       <% end %>
-    <% else %>
-      <p class="text-center my-10">No users found.</p>
-    <% end %>
-  </div>
+    </div>
+  <% else %>
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <p class="font-display text-xl text-paper/40 mb-4">No users found.</p>
+      <%= link_to t("account.create.create_account"), new_user_path,
+            class: "bg-carmine/10 text-carmine border border-carmine/25 px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-carmine hover:text-paper hover:border-carmine transition" %>
+    </div>
+  <% end %>
+
 </div>

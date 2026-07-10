@@ -1,0 +1,114 @@
+<% field_class = ->(field) {
+  base = "w-full bg-white/5 border rounded-lg px-4 py-3 text-paper placeholder:text-paper/25 focus:outline-none focus:ring-1 transition"
+  has_error = user.errors[field].any?
+  border = has_error ? "border-carmine/60 focus:border-carmine focus:ring-carmine/20" : "border-white/10 focus:border-carmine/60 focus:ring-carmine/20"
+  "#{base} #{border}"
+} %>
+
+<% if local_assigns[:show_avatar] %>
+  <div>
+    <%= form.label :avatar, "Profile picture", class: "block text-sm text-paper/70 mb-2" %>
+    <% if user.avatar.attached? %>
+      <%= image_tag user.avatar.variant(resize_to_fill: [80, 80]), class: "w-20 h-20 rounded-full object-cover border border-white/10 mb-3" %>
+    <% end %>
+    <%= form.file_field :avatar, accept: "image/png,image/jpeg,image/webp",
+          class: "w-full text-sm text-paper/70 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-carmine file:text-paper hover:file:bg-carmine/90 file:cursor-pointer" %>
+    <% if user.errors[:avatar].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:avatar].first %></p>
+    <% end %>
+  </div>
+<% end %>
+
+<div>
+  <%= form.label :username, t("account.info.username"), class: "block text-sm text-paper/70 mb-2" %>
+  <%= form.text_field :username, class: field_class.call(:username) %>
+  <% if user.errors[:username].any? %>
+    <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:username].first %></p>
+  <% end %>
+</div>
+
+<div class="grid grid-cols-2 gap-4">
+  <div>
+    <%= form.label :first_name, t("account.info.first_name"), class: "block text-sm text-paper/70 mb-2" %>
+    <%= form.text_field :first_name, class: field_class.call(:first_name) %>
+    <% if user.errors[:first_name].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:first_name].first %></p>
+    <% end %>
+  </div>
+  <div>
+    <%= form.label :last_name, t("account.info.last_name"), class: "block text-sm text-paper/70 mb-2" %>
+    <%= form.text_field :last_name, class: field_class.call(:last_name) %>
+    <% if user.errors[:last_name].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:last_name].first %></p>
+    <% end %>
+  </div>
+</div>
+
+<div data-controller="email-check">
+  <%= form.label :email, t("account.info.email"), class: "block text-sm text-paper/70 mb-2" %>
+  <%= form.email_field :email,
+        data: { email_check_target: "email", action: "input->email-check#check" },
+        class: field_class.call(:email) %>
+  <p data-email-check-target="message" class="mt-1.5 text-xs text-carmine/80"></p>
+  <% if user.errors[:email].any? %>
+    <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:email].first %></p>
+  <% end %>
+</div>
+
+<div data-controller="password-check">
+  <div>
+    <%= form.label :password, local_assigns[:new_record] ? nil : "New password (leave blank to keep current)", class: "block text-sm text-paper/70 mb-2" %>
+    <%= form.password_field :password,
+          data: { password_check_target: "password", action: "input->password-check#check" },
+          class: field_class.call(:password) %>
+
+    <ul class="mt-2 space-y-1 text-xs">
+      <li data-password-check-target="length" class="text-paper/30">At least 8 characters</li>
+      <li data-password-check-target="lowercase" class="text-paper/30">One lowercase letter</li>
+      <li data-password-check-target="uppercase" class="text-paper/30">One uppercase letter</li>
+      <li data-password-check-target="digit" class="text-paper/30">One number</li>
+      <li data-password-check-target="symbol" class="text-paper/30">One symbol</li>
+    </ul>
+    <% if user.errors[:password].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:password].first %></p>
+    <% end %>
+  </div>
+
+  <div class="mt-4">
+    <%= form.label :password_confirmation, class: "block text-sm text-paper/70 mb-2" %>
+    <%= form.password_field :password_confirmation,
+          data: { password_check_target: "confirmation", action: "input->password-check#checkMatch" },
+          class: field_class.call(:password_confirmation) %>
+    <p data-password-check-target="message" class="mt-1.5 text-xs text-carmine/80"></p>
+    <% if user.errors[:password_confirmation].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:password_confirmation].first %></p>
+    <% end %>
+  </div>
+</div>
+
+<% if local_assigns[:show_bio] %>
+  <div>
+    <%= form.label :bio, t("account.info.bio", default: "Bio"), class: "block text-sm text-paper/70 mb-2" %>
+    <%= form.text_area :bio, rows: 4, class: field_class.call(:bio) + " resize-none" %>
+    <% if user.errors[:bio].any? %>
+      <p class="mt-1.5 text-xs text-carmine/80"><%= user.errors[:bio].first %></p>
+    <% end %>
+  </div>
+<% end %>
+
+<div>
+  <%= form.label :language_id, t("account.create.preferred_language"), class: "block text-sm text-paper/70 mb-2" %>
+  <%= form.collection_select :language_id, Language.all, :id, :name,
+        { prompt: t("articles.create.select_language") },
+        class: "w-full bg-[#2f2f2f] border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+</div>
+
+<% if local_assigns[:show_role] %>
+  <div>
+    <%= form.label :role_id, t("account.create.role", default: "Role"), class: "block text-sm text-paper/70 mb-2" %>
+    <%= form.select :role_id,
+          options_for_select(Role.all.map { |r| [r.translated_name, r.id] }, user.role_id),
+          { prompt: t("account.create.select_role") },
+          class: "w-full bg-[#2f2f2f] border border-white/10 rounded-lg px-4 py-3 text-paper focus:outline-none focus:border-carmine transition" %>
+  </div>
+<% end %>

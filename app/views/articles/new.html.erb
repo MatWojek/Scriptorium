@@ -1,6 +1,27 @@
-<% content_for :title, t("navbar.new_article") %>
+<% content_for :title, t("articles.create.new_article", default: "New article") %>
 
-<div class="md:w-2/3 w-full">
-  <h1 class="font-display text-3xl text-paper mb-8"><%= t("navbar.new_article") %></h1>
-  <%= render "form", article: @article %>
+<div class="w-full max-w-2xl mx-auto px-4 pt-8 pb-28 md:pb-16">
+
+  <%# Back link %>
+  <%= link_to articles_path,
+        class: "inline-flex items-center gap-1.5 text-sm text-paper/40 hover:text-paper transition mb-6" do %>
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+    <%= t("articles.create.cancel") %>
+  <% end %>
+
+  <%# Page heading %>
+  <div class="mb-8">
+    <h1 class="font-display text-3xl text-paper mb-1">
+      <%= t("articles.create.new_article", default: "New article") %>
+    </h1>
+    <p class="text-sm text-paper/40">Share your knowledge with the community.</p>
+  </div>
+
+  <%# Form card %>
+  <div class="bg-[#252525] rounded-2xl border border-white/8 p-6 shadow-xl shadow-black/20">
+    <%= render "articles/form", article: @article,
+          submit_label: t("articles.create.create_article") %>
+  </div>
 </div>

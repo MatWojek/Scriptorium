@@ -1,0 +1,71 @@
+<%# Partial: articles/_fields.html.erb
+    Renders only the form fields — no form tag, no submit button.
+    Expects: `form` (FormBuilder), `article` (Article object)
+%>
+
+<%# Error summary %>
+<% if article.errors.any? %>
+  <div class="bg-carmine/10 border border-carmine/30 text-carmine px-4 py-3 rounded-xl text-sm">
+    <p class="font-semibold mb-2">
+      <%= pluralize(article.errors.count, "error") %> prevented this article from being saved:
+    </p>
+    <ul class="list-disc ml-5 space-y-0.5 text-carmine/80">
+      <% article.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%# Title %>
+<div class="space-y-1.5">
+  <%= form.label :title,
+        t("articles.create.title"),
+        class: "block text-[10px] font-semibold uppercase tracking-widest text-paper/40" %>
+  <%= form.text_field :title,
+        placeholder: t("articles.create.title"),
+        class: "w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-paper text-sm placeholder:text-paper/25 focus:outline-none focus:border-carmine/50 focus:ring-1 focus:ring-carmine/15 transition" %>
+</div>
+
+<%# Content / rich text %>
+<div class="space-y-1.5">
+  <%= form.label :content,
+        t("articles.create.content"),
+        class: "block text-[10px] font-semibold uppercase tracking-widest text-paper/40" %>
+  <div class="rounded-xl border border-white/10 focus-within:border-carmine/50 focus-within:ring-1 focus-within:ring-carmine/15 transition overflow-hidden
+              [&_trix-toolbar]:bg-[#222222]
+              [&_trix-toolbar]:border-b [&_trix-toolbar]:border-white/8
+              [&_trix-toolbar_button]:text-paper/60
+              [&_trix-toolbar_button:hover]:text-paper
+              [&_trix-toolbar_button.trix-active]:text-carmine
+              [&_trix-editor]:bg-black/30
+              [&_trix-editor]:text-paper
+              [&_trix-editor]:px-4 [&_trix-editor]:py-3
+              [&_trix-editor]:min-h-[180px]
+              [&_trix-editor]:outline-none
+              [&_trix-editor]:text-sm
+              [&_trix-editor]:leading-relaxed">
+    <%= form.rich_textarea :content %>
+  </div>
+</div>
+
+<%# Category & Language — side by side on wider screens %>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="space-y-1.5">
+    <%= form.label :category_id,
+          t("articles.create.category"),
+          class: "block text-[10px] font-semibold uppercase tracking-widest text-paper/40" %>
+    <%= form.collection_select :category_id, Category.all, :id, :name,
+          { prompt: t("articles.create.select_category") },
+          class: "w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-paper text-sm focus:outline-none focus:border-carmine/50 focus:ring-1 focus:ring-carmine/15 transition appearance-none cursor-pointer" %>
+  </div>
+
+  <div class="space-y-1.5">
+    <%= form.label :language_id,
+          t("articles.create.language"),
+          class: "block text-[10px] font-semibold uppercase tracking-widest text-paper/40" %>
+    <%= form.collection_select :language_id, Language.all, :id, :name,
+          { prompt: t("articles.create.select_language") },
+          class: "w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-paper text-sm focus:outline-none focus:border-carmine/50 focus:ring-1 focus:ring-carmine/15 transition appearance-none cursor-pointer" %>
+  </div>
+</div>

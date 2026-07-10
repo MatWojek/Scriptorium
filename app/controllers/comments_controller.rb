@@ -28,6 +28,7 @@ class CommentsController < ApplicationController
 
   respond_to do |format|
     if @comment.save
+      AuditLog.record(action: "comment_created", user: current_user, target: @comment, ip: request.remote_ip)
       format.html { redirect_to @article, notice: "Comment was successfully created." }
       format.json { render :show, status: :created, location: @comment }
     else
@@ -41,6 +42,7 @@ end
   def update
     respond_to do |format|
       if @comment.update(comment_params)
+        AuditLog.record(action: "comment_updated", user: current_user, target: @comment, ip: request.remote_ip)
         format.html { redirect_to @comment, notice: "Comment was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @comment }
       else
@@ -54,7 +56,8 @@ end
   def destroy
     article = @comment.article
     @comment.destroy! if @comment.editable_by?(current_user)
-
+    AuditLog.record(action: "comment_deleted", user: current_user, target: @comment, ip: request.remote_ip, details: @comment.content.to_s.truncate(100))
+    
     respond_to do |format|
       format.html { redirect_to comments_path, notice: "Comment was successfully destroyed.", status: :see_other }
       format.json { head :no_content }

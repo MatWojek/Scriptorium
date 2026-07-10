@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["password", "confirmation", "requirements", "lowercase", "uppercase", "digit", "length"]
+  static targets = ["password", "confirmation", "requirements", "lowercase", "uppercase", "digit", "symbol", "length"]
 
   check() {
     const value = this.passwordTarget.value
@@ -9,6 +9,7 @@ export default class extends Controller {
     this.toggle(this.lowercaseTarget, /[a-z]/.test(value))
     this.toggle(this.uppercaseTarget, /[A-Z]/.test(value))
     this.toggle(this.digitTarget, /\d/.test(value))
+    this.toggle(this.symbolTarget, /[^a-zA-Z0-9\s]/.test(value))
     this.toggle(this.lengthTarget, value.length >= 8)
 
     this.checkMatch()
@@ -23,12 +24,15 @@ export default class extends Controller {
     if (empty) {
       this.confirmationTarget.classList.remove("border-carmine", "border-white/10")
       this.confirmationTarget.classList.add("border-white/10")
+      this.messageTarget.textContent = ""
     } else if (match) {
       this.confirmationTarget.classList.remove("border-carmine")
       this.confirmationTarget.classList.add("border-white/10")
+      this.messageTarget.textContent = ""
     } else {
       this.confirmationTarget.classList.remove("border-white/10")
       this.confirmationTarget.classList.add("border-carmine")
+      this.messageTarget.textContent = "Passwords do not match"
     }
   }
 
